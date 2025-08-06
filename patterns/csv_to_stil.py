@@ -1,4 +1,3 @@
-
 import pandas as pd
 
 def to_bin(val, bits):
@@ -7,10 +6,10 @@ def to_bin(val, bits):
         val = (1 << bits) + val
     return format(val, f'0{bits}b')
 
-# Load from CSV
-df = pd.read_csv("mult_vectors.csv")  # replace with your path
+# Load CSV file (make sure this path is correct)
+df = pd.read_csv("mult_vectors.csv")  # Replace with your actual CSV path
 
-# Header
+# STIL header
 header = '''STIL 1.0;
 
 Signals {
@@ -37,7 +36,7 @@ WaveformTable "default" {
 Patterns {
 '''
 
-# Patterns
+# Build pattern section
 patterns = ""
 for i, row in df.iterrows():
     a_bin = to_bin(int(row["A"]), 32)
@@ -46,4 +45,20 @@ for i, row in df.iterrows():
     valid_bin = str(row["Valid"])
 
     patterns += f'''
- ​:contentReference[oaicite:0]{index=0}​
+    Pattern "PATTERN_{i+1}" {{
+        WAVEFORM {{
+            a = '{a_bin}';
+            b = '{b_bin}';
+            result = '{result_bin}';
+            valid_out = '{valid_bin}';
+        }}
+    }}'''
+
+# Close file
+footer = "\n}"
+
+# Write to .stil
+with open("pipelined_multiplier_patterns_ate.stil", "w") as f:
+    f.write(header + patterns + footer)
+
+print("✅ STIL file generated: pipelined_multiplier_patterns_ate.stil")
