@@ -1,3 +1,4 @@
+// Code your design here
 module pipelined_multiplier (
     input wire clk,
     input wire rst,
@@ -8,15 +9,19 @@ module pipelined_multiplier (
     output reg [63:0] result
 );
 
+    // Stage 1 registers
     reg [31:0] a_reg, b_reg;
     reg valid_s1;
 
+    // Stage 2 registers
     reg [63:0] product_reg;
     reg valid_s2;
 
+    // Stage 3 registers
     reg [63:0] result_reg;
     reg valid_s3;
 
+    // Stage 1
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             a_reg <= 0;
@@ -31,6 +36,7 @@ module pipelined_multiplier (
         end
     end
 
+    // Stage 2
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             product_reg <= 0;
@@ -43,6 +49,7 @@ module pipelined_multiplier (
         end
     end
 
+    // Stage 3
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             result_reg <= 0;
@@ -55,6 +62,7 @@ module pipelined_multiplier (
         end
     end
 
+    // Output
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             result <= 0;
